@@ -1,0 +1,52 @@
+<ion-view view-title="Title">
+<ion-header-bar align-title="center" class="bar-positive">
+<a class="button icon-left ion-ios-arrow-left button-clear button-light" href="#/home"></a>
+<h1 class="title">VirtualRun3D</h1>
+</ion-header-bar>
+<ion-content class="run center">
+
+<button ng-hide="session.IsRunning" class="button button-block button-positive button-outline icon ion-play start-stop" ng-click="start()"></button>
+
+<div ng-show="session.IsRunning">
+	<div class="row">
+		<div class="col">
+			<h4 class="centre"><span class="time">00:00:00</span></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<p><span class="speed">{{session.speed}}</span> <span class="units">{{settings.units}}</span></p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<p class="centre"><span class="distance">{{session.distance}} </span><span class="unitsmall">{{session.units}}</span></p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col col-50">
+			<h6 class="label">Target</h6>
+			<p span class="info">
+				<span class="speedinfo">{{settings.target}}</span>
+				<span class="unitsmall">{{settings.units}}</span>
+			</p>
+			</div>
+			<div class="col col-50">
+				<h6 class="label">Average</h6>
+				<p span class="info">
+					<span class="speedinfo">{{session.average}}</span>
+					<span class="unitsmall">{{settings.units}}</span></p>
+				</div>
+			</div>
+		</div>
+<!-- <div class="row">
+	<div class="col">
+		<p>Old Latitude : {{oldLat}}</p>
+		<p>Old Longitue : {{oldLng}}</p>
+		<p>Latitude : {{lat}}</p>
+		<p>longitude : {{lng}}</p>
+		<p>Distance : {{distance}} meters</p>
+	</div>
+</div> -->
+</ion-content>
+</ion-view>
