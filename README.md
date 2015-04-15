@@ -4,8 +4,23 @@ VirtualRun3D uses spatial sound to simulate the audio sensations experienced by 
 
 ## Running Project
 
+On Android
 ```
-$ sudo ionic serve
+sudo npm install
+sudo ionic platform add android
+sudo ionic emulate android
+```
+
+On ios
+```
+sudo npm install
+sudo ionic platform add android
+sudo ionic emulate android
+```
+
+Locally 
+```
+sudo ionic serve
 ```
 
 ## License
