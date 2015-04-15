@@ -1,7 +1,17 @@
-angular.module('virtualrun.services', [])
+angular.module('virtualrun.services', ['ngCordova'])
 
-.factory('$appHelper', function($ionicHistory, $localStorage, $state){
+.factory('$appHelper', function($ionicHistory, $localStorage, $state, $cordovaMedia, $http, $q){
 	return {
+		getData:  function(link) {
+			var deferred = $q.defer();
+
+			$http.get(link).success(function(data) {
+				deferred.resolve(data);
+			});
+
+			return deferred.promise;
+		},
+
 		goBack : function() {
 			$ionicHistory.goBack();
 		},
@@ -24,7 +34,16 @@ angular.module('virtualrun.services', [])
 				return "Mi";
 		},
 
-    	calcDistance : function (lat1, lon1, lat2, lon2) {
+		playSound : function(target, current, type){
+			var link = "http://cise.ufl.edu/~alyssa/3drun/serv/select.php?current=" + current + "&target=" + target + "&type=" + type;
+			console.log(link);
+			this.getData(link).then(function(data){
+				var audio = new Audio(data.sound);
+				audio.play();
+			});
+		},
+
+		calcDistance : function (lat1, lon1, lat2, lon2) {
 			var R = 6378137; // m
 			var dLat = (lat2-lat1) * Math.PI / 180;
 			var dLon = (lon2-lon1) * Math.PI / 180;
