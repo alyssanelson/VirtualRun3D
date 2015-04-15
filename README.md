@@ -2,8 +2,13 @@
 
 VirtualRun3D uses spatial sound to simulate the audio sensations experienced by someone running in a race. The target population of the project will be runners and athletes with a special focus on long distance runners. Athletes often perform differently when they are performing in front of a crowd. The relationship between a runner’s performance and whether or not there are spectators is a complex one. Many perform dramatically better when they believe they have an audience. In this case, the 3D sound will provide social cues that will encourage the user to run faster and enhance their running experience. Some people are prone to race anxiety and stress. For them, this project will allow them to become use to the sensation of being in front a crowd and reduce their fear and anxiety when a physical crowd is present.
 
-## License
+## Running Project
 
+```
+$ sudo ionic serve
+```
+
+## License
 The MIT License
 
 Copyright (c) 2010-2015 Google, Inc. http://angularjs.org
