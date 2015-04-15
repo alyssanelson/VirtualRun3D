@@ -6,19 +6,24 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
     "speed" : "0",
     "average" : "0",
     "distance" : 0,
-    "IsRunning" : false
+    "IsRunning" : false,
+    "millis" : 0
   };
+
+  $scope.Lat = -1;
+  $scope.Lng = -1;
+  $scope.distance = 0;
+  $scope.lastime = 0;
+  var interval1;
 
   $scope.timerRunning = false;
 
   $scope.startTimer = function (){
     $scope.$broadcast('timer-start');
-    $scope.timerRunning = true;
   };
 
   $scope.stopTimer = function (){
     $scope.$broadcast('timer-stop');
-    $scope.timerRunning = false;
   };
 
   $scope.$on('timer-stopped', function (event, data){
@@ -26,7 +31,8 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
   });
 
   $scope.goHome = function(){
-    // $scope.stopTimer();
+    $scope.stopTimer();
+    clearInterval(interval1);
     $state.go('home');
   }
 
@@ -36,21 +42,17 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
     $window.navigator.geolocation.watchPosition(success, error, options);
     $scope.stopTimer();
     $scope.startTimer();
+
     // Wait 3 second before playing first cheer!
     setTimeout(function(){
       $appHelper.playSound($scope.settings.target, $scope.session.speed, 'single')
     }, 3000);
 
     // Continue to poll for cheer every 25 seconds
-    setInterval(function(){
+    interval1 = setInterval(function(){
       $appHelper.playSound($scope.settings.target, $scope.session.speed, 'single')
     }, 12000)
   }
-
-
-  $scope.Lat = -1;
-  $scope.Lng = -1;
-  $scope.distance = 0;
 
   var options = {
     enableHighAccuracy: true,
@@ -62,29 +64,29 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
    $scope.$apply(function(){
     var lat = position.coords.latitude;
     var lng = position.coords.longitude;
-    if ($scope.oldLat !== -1){
+    if ($scope.Lat !== -1){
      var distance = $appHelper.calcDistance($scope.Lat, $scope.Lng, lat, lng);
+     var time = $scope.session.millis;
+     var dtime = time - $scope.lastime;
+
      $scope.distance += distance; 
-     $scope.session.distance = Math.round($scope.distance, 2);
-   }
-   $scope.Lat = lat
-   $scope.Lng = lng;
-   console.log($scope.session);
-   console.log(lat);
-   console.log(lng);
-   console.log($scope.Lat);
-   console.log($scope.Lng);
-   // console.log($appHelper.calcDistance(80, 29, lat, lng));
- })
+     var stats = $appHelper.getRunningStats($scope.distance, time, distance, dtime);
+     $scope.lastime = time;
+     $scope.session.distance = stats.distance;
+     if (time > 0)
+      $scope.session.average = stats.average;
+     if (dtime > 0)
+      $scope.session.speed = stats.speed;
+    $scope.$apply();
+  }
+  $scope.Lat = lat
+  $scope.Lng = lng;
+})
  }
 
  function error(err) {
   console.warn('ERROR (' + err.code + '): ' + err.message);
 };
-
-  // function getLocation(){
-  //   navigator.geolocation.getCurrentPosition(success, error, options);
-  // }
 })
 
 

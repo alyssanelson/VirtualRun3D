@@ -8,7 +8,7 @@
 <div ng-show="session.IsRunning">
 	<div class="row">
 		<div class="col">
-			<h4 class="centre"><span class="time"><timer interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></span></h4>
+			<h4 class="centre"><span class="time"><timer interval="1000" millis="session.millis">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></span></h4>
 		</div>
 	</div>
 	<div class="row">

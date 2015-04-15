@@ -34,6 +34,24 @@ angular.module('virtualrun.services', ['ngCordova'])
 				return "Mi";
 		},
 
+		getSpeed : function(distance, time){
+			if ($localStorage.userInfo.units === "m/s"){
+				return Math.floor(distance * 2777777.7777778/time)/100
+			} else if ($localStorage.userInfo.units === "mph"){
+				return Math.floor(distance * 10000000/time)/100
+			} else {
+				return Math.floor(6000 / (distance*100000/time)) / 100;
+			}
+		},
+
+		getRunningStats : function(distance, time, delta_distance, delta_time){
+			var result = {};
+			result.distance = Math.floor(distance * 100) / 100;
+			result.average = this.getSpeed(distance, time) ;
+			result.speed = this.getSpeed(delta_distance, delta_time) ;
+			return result;
+		},
+
 		playSound : function(target, current, type){
 			var link = "http://cise.ufl.edu/~alyssa/3drun/serv/select.php?current=" + current + "&target=" + target + "&type=" + type;
 			console.log(link);
