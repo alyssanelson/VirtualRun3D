@@ -8,14 +8,16 @@ On Android
 ```
 sudo npm install
 sudo ionic platform add android
+sudo ionic build android
 sudo ionic emulate android
 ```
 
 On ios
 ```
 sudo npm install
-sudo ionic platform add android
-sudo ionic emulate android
+sudo ionic platform add ios
+sudo ionic build ios
+sudo ionic emulate ios
 ```
 
 Locally 
