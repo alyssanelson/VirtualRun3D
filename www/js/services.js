@@ -36,9 +36,9 @@ angular.module('virtualrun.services', ['ngCordova'])
 
 		getSpeed : function(distance, time){
 			if ($localStorage.userInfo.units === "m/s"){
-				return Math.floor(distance * 2777777.7777778/time)/100
+				return Math.floor((distance * 2777777.7777778)/time)/100
 			} else if ($localStorage.userInfo.units === "mph"){
-				return Math.floor(distance * 10000000/time)/100
+				return Math.floor((distance * 10000000)/time)/100
 			} else {
 				return Math.floor(6000 / (distance*100000/time)) / 100;
 			}
@@ -56,8 +56,10 @@ angular.module('virtualrun.services', ['ngCordova'])
 			var link = "http://cise.ufl.edu/~alyssa/3drun/serv/select.php?current=" + current + "&target=" + target + "&type=" + type;
 			console.log(link);
 			this.getData(link).then(function(data){
-				var audio = new Audio(data.sound);
-				audio.play();
+				if (data.sound !== undefined){
+					var audio = new Audio(data.sound);
+					audio.play();
+				}
 			});
 		},
 

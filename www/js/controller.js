@@ -10,8 +10,15 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
     "millis" : 0
   };
 
-  $scope.Lat = -1;
-  $scope.Lng = -1;
+  var sim = {
+    "coords" : {
+      latitude : 29.61567339999999,
+      longitude : -82.3659167
+    }
+  };
+
+  $scope.Lat = 29.61567339999999515;
+  $scope.Lng = -82.3659168;
   $scope.distance = 0;
   $scope.lastime = 0;
   var interval1;
@@ -30,28 +37,46 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
     console.log('Timer Stopped - data = ', data);
   });
 
+  function playCheer(){
+    $appHelper.playSound($scope.settings.target, $scope.session.speed, 'single');
+  }
+
+  function playCrowd(){
+    $appHelper.playSound($scope.settings.target, $scope.session.speed, 'crowd');
+  }
+
+  function getPosition(){
+    $window.navigator.geolocation.getCurrentPosition(error, error, options);
+  }
+
+  var interval1 = setInterval(playCheer, 25000);
+  var interval2 = setInterval(playCrowd, 25000);
+  var interval3 = setInterval(getPosition, 350);
+  clearInterval(interval1);
+  clearInterval(interval2);
+  clearInterval(interval3);
+
   $scope.goHome = function(){
     $scope.stopTimer();
     clearInterval(interval1);
+    clearInterval(interval2);
+    clearInterval(interval3);
     $state.go('home');
   }
 
   $scope.start = function(){
     $scope.session.IsRunning = !$scope.session.IsRunning;
     $scope.session.units = $appHelper.getDistanceUnit();
-    $window.navigator.geolocation.watchPosition(success, error, options);
     $scope.stopTimer();
     $scope.startTimer();
 
+    getPosition();
+    interval3 = setInterval(getPosition, 1000);
     // Wait 3 second before playing first cheer!
-    setTimeout(function(){
-      $appHelper.playSound($scope.settings.target, $scope.session.speed, 'single')
-    }, 3000);
-
-    // Continue to poll for cheer every 25 seconds
-    interval1 = setInterval(function(){
-      $appHelper.playSound($scope.settings.target, $scope.session.speed, 'single')
-    }, 12000)
+    setTimeout(playCheer, 3000);
+    setTimeout(playCrowd, 3000);
+    interval1 = setInterval(playCheer, 25000);
+    interval2 = setInterval(playCrowd, 25000);
   }
 
   var options = {
@@ -60,11 +85,13 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
     maximumAge: 0
   };
 
+  
+  var random = 0;
   function success(position){
-   $scope.$apply(function(){
-    var lat = position.coords.latitude;
-    var lng = position.coords.longitude;
-    if ($scope.Lat !== -1){
+   var lat = position.coords.latitude + random;
+   var lng = position.coords.longitude;
+   if (true){
+     random += (((Math.random() * ( 1 + 25 - 20 )) + 20) / 16500);
      var distance = $appHelper.calcDistance($scope.Lat, $scope.Lng, lat, lng);
      var time = $scope.session.millis;
      var dtime = time - $scope.lastime;
@@ -75,17 +102,17 @@ angular.module('virtualrun.controllers', ['virtualrun.services', 'timer'])
      $scope.session.distance = stats.distance;
      if (time > 0)
       $scope.session.average = stats.average;
-     if (dtime > 0)
+    if (dtime > 0)
       $scope.session.speed = stats.speed;
-    $scope.$apply();
   }
   $scope.Lat = lat
   $scope.Lng = lng;
-})
- }
+  $scope.$apply();
+}
 
- function error(err) {
+function error(err) {
   console.warn('ERROR (' + err.code + '): ' + err.message);
+  success(sim);
 };
 })
 
